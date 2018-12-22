@@ -17,6 +17,7 @@ import java.util.UUID;
 public class OrganizationView {
 
     private UUID uuid;
+
     @NotNull
     @NotEmpty
     @Size(min = 2, max = 20)

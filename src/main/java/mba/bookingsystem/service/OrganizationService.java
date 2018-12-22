@@ -31,15 +31,14 @@ public class OrganizationService {
 
     public Organization create(Organization organization) {
         throwIfNameExists(organization.getName());
-        organization.setUuid(UUID.randomUUID());
         organizationRepository.save(organization);
         return organization;
     }
 
 
     public Organization update(Organization organization, UUID uuid) {
-        throwIfNameExists(organization.getName());
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Organization.class, organizationRepository);
+        throwIfNameExists(organization.getName());
         Organization dbOrganization = organizationRepository.findByUuid(uuid);
         dbOrganization.setName(organization.getName());
         organizationRepository.save(dbOrganization);
