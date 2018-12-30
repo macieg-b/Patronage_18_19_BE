@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
+
 public interface OrganizationRepository extends JpaRepository<Organization, UUID> {
 
     List<Organization> findAll();
@@ -15,4 +16,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, UUID
     Organization findByUuid(UUID uuid);
 
     boolean existsByName(String name);
+
+    Organization findByName(String name);
 }

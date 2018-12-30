@@ -3,7 +3,6 @@ package mba.bookingsystem.service;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import mba.bookingsystem.controller.OrganizationController;
 import mba.bookingsystem.exception.AlreadyExistsException;
 import mba.bookingsystem.exception.NotFoundException;
 import mba.bookingsystem.model.db.Organization;
@@ -13,13 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -71,14 +70,16 @@ public class OrganizationServiceTest {
 
         Organization dbOrganization = organizationService.create(organization);
         assertEquals(EXPECTED_NAME, dbOrganization.getName());
-        assertEquals(EXPECTED_UUID, dbOrganization.getUuid());
     }
 
     @Test(expected = AlreadyExistsException.class)
     @UseDataProvider("getCorrectOrganization")
     public void createThrowAlreadyExists(final Organization organization) {
         when(organizationRepository.save(organization)).thenReturn(organization);
-        when(organizationRepository.existsByName(any(String.class))).thenReturn(true);
+        when(organizationRepository.findByName(any(String.class))).thenReturn(Organization.builder()
+                .name(EXPECTED_NAME)
+                .uuid(UUID.randomUUID())
+                .build());
         organizationService.create(organization);
     }
 
@@ -102,6 +103,10 @@ public class OrganizationServiceTest {
         when(organizationRepository.existsById(any(UUID.class))).thenReturn(true);
         when(organizationRepository.existsByName(any(String.class))).thenReturn(true);
         when(organizationRepository.findByUuid(any(UUID.class))).thenReturn(organization);
+        when(organizationRepository.findByName(any(String.class))).thenReturn(Organization.builder()
+                .name(EXPECTED_NAME)
+                .uuid(UUID.randomUUID())
+                .build());
         organizationService.update(organization, EXPECTED_UUID);
     }
 
