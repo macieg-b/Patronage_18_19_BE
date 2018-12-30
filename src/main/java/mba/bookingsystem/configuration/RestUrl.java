@@ -8,4 +8,6 @@ public class RestUrl {
 
     public static final String BOARDROOM_URL = BASE_URL + "/boardroom";
 
+    public static final String RESERVATION_URL = BASE_URL + "/reservation";
+
 }
