@@ -22,7 +22,7 @@ public class BookingSystemApplication {
         SpringApplication.run(BookingSystemApplication.class, args);
     }
 
-    private int ORGANIZATION_AMOUNT = 15;
+    private int ORGANIZATION_AMOUNT = 3;
 
     @Bean
     CommandLineRunner initInMemoryDatabase(OrganizationRepository organizationRepository, BoardroomRepository boardroomRepository) {
