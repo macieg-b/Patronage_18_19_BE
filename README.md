@@ -16,7 +16,6 @@
     mvn spring-boot:run
 
 ## REST API documentation
-Run application and open docs in web browser *htttp://[base_url]:[port]/swagger-ui.html*
-<br>[Swagger 2 - docs](http://localhost:8080/swagger-ui.html)
-
+* Open docs live in web browser [swaggerhub.com](https://app.swaggerhub.com/apis/macieg-b/patronage-18_19/1.0.0)
+* Run docs locally: *htttp://[base_url]:[port]/swagger-ui.html*
 
