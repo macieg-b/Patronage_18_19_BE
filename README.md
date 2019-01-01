@@ -4,18 +4,18 @@
 ## Prerequisites
 
 * [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-* [Maven](https://maven.apache.org/install.html)
+* [Gradle](https://docs.gradle.org/current/userguide/installation.html)
 
-## Compile with Maven
+## Build with gradle wrapper
 
-    mvn compile
+    ./gradlew build
 
 
 ## Run 
 
-    mvn spring-boot:run
+    ./gradlew bootRun
 
 ## REST API documentation
-* Open docs live in web browser [swaggerhub.com](https://app.swaggerhub.com/apis/macieg-b/patronage-18_19/1.0.0)
-* Run docs locally: *htttp://[base_url]:[port]/swagger-ui.html*
+* Open public docs on [swaggerhub.com](https://app.swaggerhub.com/apis/macieg-b/patronage-18_19/1.0.0)
+* Run docs locally: *htttp://[base_url]:[port]/swagger-ui.html* and test API with **swagger-ui**
 
