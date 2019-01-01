@@ -1,3 +1,11 @@
+.gradle
+/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+*.class
+/out/
+
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
