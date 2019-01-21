@@ -32,21 +32,21 @@ public class BoardroomController {
 
     @GetMapping
     public ResponseEntity<List<BoardroomView>> getAll() {
-        List<Boardroom> boardroomList = boardroomService.getAll();
+        var boardroomList = boardroomService.getAll();
         return ResponseEntity
                 .ok(convertToView(boardroomList, BoardroomView.class));
     }
 
     @GetMapping(value = "/{uuid}")
     public ResponseEntity<BoardroomView> getOne(@PathVariable UUID uuid) {
-        Boardroom boardroom = boardroomService.getOne(uuid);
+        var boardroom = boardroomService.getOne(uuid);
         return ResponseEntity
                 .ok(convertToView(boardroom, BoardroomView.class));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BoardroomView> create(@Valid @RequestBody BoardroomView boardroomView) {
-        Boardroom boardroom = boardroomService.create(convertToModel(boardroomView, Boardroom.class));
+        var boardroom = boardroomService.create(convertToModel(boardroomView, Boardroom.class));
         return ResponseEntity
                 .created(URI.create(
                         String.format("/%s/%s",
@@ -59,7 +59,7 @@ public class BoardroomController {
 
     @PutMapping(value = "/{uuid}")
     public ResponseEntity<BoardroomView> update(@Valid @RequestBody BoardroomView boardroomView, @PathVariable UUID uuid) {
-        Boardroom boardroom = boardroomService.update(convertToModel(boardroomView, Boardroom.class), uuid);
+        var boardroom = boardroomService.update(convertToModel(boardroomView, Boardroom.class), uuid);
         return ResponseEntity
                 .ok(convertToView(boardroom, BoardroomView.class));
 

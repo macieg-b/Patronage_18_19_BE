@@ -38,22 +38,22 @@ public class BoardroomService {
 
     public Boardroom update(Boardroom boardroom, UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Boardroom.class, boardroomRepository);
-        Boardroom dbBoardroom = boardroomRepository.findByUuid(uuid);
+        var dbBoardroom = boardroomRepository.findByUuid(uuid);
         throwIfNameExists(boardroom.getName(), boardroom);
         dbBoardroom.setName(boardroom.getName());
-        boardroom = boardroomRepository.save(boardroom);
+        dbBoardroom = boardroomRepository.save(dbBoardroom);
         return dbBoardroom;
 
     }
 
     public void delete(UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Organization.class, boardroomRepository);
-        Boardroom boardroom = boardroomRepository.findByUuid(uuid);
+        var boardroom = boardroomRepository.findByUuid(uuid);
         boardroomRepository.delete(boardroom);
     }
 
     private void throwIfNameExists(String name, Boardroom boardroom) {
-        Boardroom dbBoardroom = boardroomRepository.findByName(name);
+        var dbBoardroom = boardroomRepository.findByName(name);
         if (dbBoardroom == null) {
             return;
         }

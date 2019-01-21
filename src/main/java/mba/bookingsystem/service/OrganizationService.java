@@ -40,7 +40,7 @@ public class OrganizationService {
     public Organization update(Organization organization, UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Organization.class, organizationRepository);
         throwIfNameExists(organization.getName(), organization);
-        Organization dbOrganization = organizationRepository.findByUuid(uuid);
+        var dbOrganization = organizationRepository.findByUuid(uuid);
         dbOrganization.setName(organization.getName());
         organizationRepository.save(dbOrganization);
         return dbOrganization;
@@ -49,12 +49,12 @@ public class OrganizationService {
 
     public void delete(UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Organization.class, organizationRepository);
-        Organization organization = organizationRepository.findByUuid(uuid);
+        var organization = organizationRepository.findByUuid(uuid);
         organizationRepository.delete(organization);
     }
 
     private void throwIfNameExists(String name, Organization organization) {
-        Organization dbOrganization = organizationRepository.findByName(name);
+        var dbOrganization = organizationRepository.findByName(name);
         if (dbOrganization == null) {
             return;
         }

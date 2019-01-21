@@ -32,21 +32,21 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationView>> getAll() {
-        List<Reservation> reservationList = reservationService.getAll();
+        var reservationList = reservationService.getAll();
         return ResponseEntity
                 .ok(convertToView(reservationList, ReservationView.class));
     }
 
     @GetMapping(value = "/{uuid}")
     public ResponseEntity<ReservationView> getOne(@PathVariable UUID uuid) {
-        Reservation reservation = reservationService.getOne(uuid);
+        var reservation = reservationService.getOne(uuid);
         return ResponseEntity
                 .ok(convertToView(reservation, ReservationView.class));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationView> create(@Valid @RequestBody ReservationView reservationView) {
-        Reservation reservation = reservationService.create(convertToModel(reservationView, Reservation.class));
+        var reservation = reservationService.create(convertToModel(reservationView, Reservation.class));
         return ResponseEntity
                 .created(URI.create(
                         String.format("/%s/%s",
@@ -59,7 +59,7 @@ public class ReservationController {
 
     @PutMapping(value = "/{uuid}")
     public ResponseEntity<ReservationView> update(@Valid @RequestBody ReservationView reservationView, @PathVariable UUID uuid) {
-        Reservation reservation = reservationService.update(convertToModel(reservationView, Reservation.class), uuid);
+        var reservation = reservationService.update(convertToModel(reservationView, Reservation.class), uuid);
         return ResponseEntity
                 .ok(convertToView(reservation, ReservationView.class));
 

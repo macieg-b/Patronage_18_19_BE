@@ -46,7 +46,7 @@ public class ReservationService {
 
     public void delete(UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Reservation.class, reservationRepository);
-        Reservation reservation = reservationRepository.findByUuid(uuid);
+        var reservation = reservationRepository.findByUuid(uuid);
         reservationRepository.delete(reservation);
     }
 }

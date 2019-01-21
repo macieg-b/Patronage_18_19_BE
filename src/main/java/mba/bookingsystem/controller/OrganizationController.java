@@ -34,21 +34,21 @@ public class OrganizationController {
 
     @GetMapping
     public ResponseEntity<List<OrganizationView>> getAll() {
-        List<Organization> organizationList = organizationService.getAll();
+        var organizationList = organizationService.getAll();
         return ResponseEntity
                 .ok(convertToView(organizationList, OrganizationView.class));
     }
 
     @GetMapping(value = "/{uuid}")
     public ResponseEntity<OrganizationView> getOne(@PathVariable UUID uuid) {
-        Organization organization = organizationService.getOne(uuid);
+        var organization = organizationService.getOne(uuid);
         return ResponseEntity
                 .ok(convertToView(organization, OrganizationView.class));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrganizationView> create(@Valid @RequestBody OrganizationView organizationView) {
-        Organization organization = organizationService.create(convertToModel(organizationView, Organization.class));
+        var organization = organizationService.create(convertToModel(organizationView, Organization.class));
         return ResponseEntity
                 .created(URI.create(
                         String.format("/%s/%s",
@@ -61,7 +61,7 @@ public class OrganizationController {
 
     @PutMapping(value = "/{uuid}")
     public ResponseEntity<OrganizationView> update(@Valid @RequestBody OrganizationView organizationView, @PathVariable UUID uuid) {
-        Organization organization = organizationService.update(convertToModel(organizationView, Organization.class), uuid);
+        var organization = organizationService.update(convertToModel(organizationView, Organization.class), uuid);
         return ResponseEntity
                 .ok(convertToView(organization, OrganizationView.class));
 
