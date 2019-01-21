@@ -39,6 +39,7 @@ public class OrganizationService {
 
     public Organization update(Organization organization, UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Organization.class, organizationRepository);
+        organization.setUuid(uuid);
         throwIfNameExists(organization.getName(), organization);
         var dbOrganization = organizationRepository.findByUuid(uuid);
         dbOrganization.setName(organization.getName());

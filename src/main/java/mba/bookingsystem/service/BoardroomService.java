@@ -39,9 +39,9 @@ public class BoardroomService {
     public Boardroom update(Boardroom boardroom, UUID uuid) {
         RepositoryValidator.ThrowNotFoundIfNotExist(uuid, Boardroom.class, boardroomRepository);
         var dbBoardroom = boardroomRepository.findByUuid(uuid);
+        boardroom.setUuid(uuid);
         throwIfNameExists(boardroom.getName(), boardroom);
-        dbBoardroom.setName(boardroom.getName());
-        dbBoardroom = boardroomRepository.save(dbBoardroom);
+        dbBoardroom = boardroomRepository.save(boardroom);
         return dbBoardroom;
 
     }
