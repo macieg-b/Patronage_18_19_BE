@@ -16,5 +16,5 @@
     ./gradlew bootRun
 
 ## REST API documentation
-* Open public docs on [swaggerhub.com](https://app.swaggerhub.com/apis/m4235/patronage-18_19/1.2.0)
+* Open public docs on [swaggerhub.com](https://app.swaggerhub.com/apis/macieg-b/patronage-18_19/1.2.0)
 * Run docs locally: *htttp://[base_url]:[port]/swagger-ui.html* and test API with **swagger-ui**
