@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,7 +19,10 @@ public class Reservation {
     @Id
     @GeneratedValue
     private UUID uuid;
-    private UUID organizationUuid;
+    @ManyToOne
+    private Organization organization;
+    @ManyToOne
+    private Boardroom boardroom;
     private Date startDate;
     private Date endDate;
 }

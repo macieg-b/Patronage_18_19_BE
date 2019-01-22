@@ -3,20 +3,21 @@ package mba.bookingsystem.service;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import mba.bookingsystem.exception.AlreadyExistsException;
 import mba.bookingsystem.exception.NotFoundException;
-import mba.bookingsystem.model.db.Organization;
-import mba.bookingsystem.model.db.Reservation;
+import mba.bookingsystem.model.PhoneInterface;
+import mba.bookingsystem.model.db.*;
+import mba.bookingsystem.repository.BoardroomRepository;
 import mba.bookingsystem.repository.OrganizationRepository;
 import mba.bookingsystem.repository.ReservationRepository;
+import org.h2.util.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.Date;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,22 +29,25 @@ import static org.mockito.Mockito.when;
 @RunWith(DataProviderRunner.class)
 public class ReservationServiceTest {
 
+    private final long ONE_MINUTE_IN_MILLIS = 60000;
     private static final UUID EXPECTED_UUID = UUID.randomUUID();
     private static final UUID EXPECTED_ORGANIZATION_UUID = UUID.randomUUID();
     private static final String EXPECTED_NAME = "Expected Name";
-    private static final Date EXPECTED_START = new Date(new java.util.Date().getTime());
-    private static final Date EXPECTED_END = new Date(new java.util.Date().getTime());
-
+    private static final long EXPECTED_START = new Date(new java.util.Date().getTime() + 500000).getTime();
+    private static final long EXPECTED_END = new Date(new java.util.Date().getTime() + 1000000).getTime();
     @Mock
     private ReservationRepository reservationRepository;
     @Mock
     private OrganizationRepository organizationRepository;
+    @Mock
+    private BoardroomRepository boardroomRepository;
+
     private ReservationService reservationService;
 
     @Before
     public void prepare() {
         MockitoAnnotations.initMocks(this);
-        reservationService = new ReservationService(reservationRepository, organizationRepository);
+        reservationService = new ReservationService(reservationRepository, organizationRepository, boardroomRepository);
     }
 
     @DataProvider
@@ -51,9 +55,31 @@ public class ReservationServiceTest {
         return new Reservation[]{
                 Reservation.builder()
                         .uuid(EXPECTED_UUID)
-                        .organizationUuid(EXPECTED_ORGANIZATION_UUID)
-                        .startDate(EXPECTED_START)
-                        .endDate(EXPECTED_END)
+                        .organization(Organization.builder()
+                                .uuid(EXPECTED_ORGANIZATION_UUID)
+                                .name("Name")
+                                .build())
+                        .boardroom(Boardroom.builder()
+                                .uuid(UUID.randomUUID())
+                                .name("Green")
+                                .identifier("0.33")
+                                .floor(0)
+                                .available(false)
+                                .normalSeats(1000)
+                                .lyingSeats(100)
+                                .hangingSeats(5)
+                                .equipment(Equipment.builder()
+                                        .projectorName("Projector 0")
+                                        .phone(Phone.builder()
+                                                .phoneAvailable(true)
+                                                .extensionNumber(100)
+                                                .publicNumber(null)
+                                                .phoneInterface(PhoneInterface.BLUETOOTH)
+                                                .build())
+                                        .build())
+                                .build())
+                        .startDate(new Date(EXPECTED_START))
+                        .endDate(new Date(EXPECTED_END))
                         .build()};
     }
 
@@ -77,9 +103,9 @@ public class ReservationServiceTest {
 
         Reservation dbReservation = reservationService.getOne(reservationUuid);
         assertEquals(EXPECTED_UUID, dbReservation.getUuid());
-        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganizationUuid());
-        assertEquals(EXPECTED_START, dbReservation.getStartDate());
-        assertEquals(EXPECTED_END, dbReservation.getEndDate());
+        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganization().getUuid());
+        assertEquals(EXPECTED_START, dbReservation.getStartDate().getTime());
+        assertEquals(EXPECTED_END, dbReservation.getEndDate().getTime());
     }
 
     @Test
@@ -87,12 +113,13 @@ public class ReservationServiceTest {
     public void createSuccess(final Reservation reservation) {
         when(reservationRepository.save(reservation)).thenReturn(reservation);
         when(organizationRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(boardroomRepository.existsById(any(UUID.class))).thenReturn(true);
         when(organizationRepository.findByUuid(any(UUID.class))).thenReturn(getCorrectOrganization());
         Reservation dbReservation = reservationService.create(reservation);
         assertEquals(EXPECTED_UUID, dbReservation.getUuid());
-        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganizationUuid());
-        assertEquals(EXPECTED_START.getTime(), dbReservation.getStartDate().getTime());
-        assertEquals(EXPECTED_END.getTime(), dbReservation.getEndDate().getTime());
+        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganization().getUuid());
+        assertEquals(EXPECTED_START, dbReservation.getStartDate().getTime());
+        assertEquals(EXPECTED_END, dbReservation.getEndDate().getTime());
     }
 
     @Test(expected = NotFoundException.class)
@@ -108,13 +135,15 @@ public class ReservationServiceTest {
         final UUID reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(true);
         when(reservationRepository.findByUuid(reservationUuid)).thenReturn(reservation);
+        when(organizationRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(boardroomRepository.existsById(any(UUID.class))).thenReturn(true);
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
 
         Reservation dbReservation = reservationService.update(reservation, reservationUuid);
         assertEquals(EXPECTED_UUID, dbReservation.getUuid());
-        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganizationUuid());
-        assertEquals(EXPECTED_START.getTime(), dbReservation.getStartDate().getTime());
-        assertEquals(EXPECTED_END.getTime(), dbReservation.getEndDate().getTime());
+        assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganization().getUuid());
+        assertEquals(EXPECTED_START, dbReservation.getStartDate().getTime());
+        assertEquals(EXPECTED_END, dbReservation.getEndDate().getTime());
     }
 
     @Test(expected = NotFoundException.class)
@@ -140,5 +169,53 @@ public class ReservationServiceTest {
         final UUID reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(false);
         reservationService.delete(reservationUuid);
+    }
+
+    @Test
+    public void dateNotOverlap() {
+        Date startA, endA, startB, endB;
+        startA = new Date();
+        endA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+
+        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        assertEquals(false, overlap);
+    }
+
+    @Test
+    public void endBOverlapInAPeriod() {
+        Date startA, endA, startB, endB;
+        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        startB = new Date(new Date().getTime() + (20 * ONE_MINUTE_IN_MILLIS));
+        endB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+
+        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        assertEquals(true, overlap);
+    }
+
+    @Test
+    public void startBOverlapInAPeriod() {
+        Date startA, endA, startB, endB;
+        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        endB = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
+
+        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        assertEquals(true, overlap);
+    }
+
+    @Test
+    public void startBANDendBOverlapInAPeriod() {
+        Date startA, endA, startB, endB;
+        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        endA = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
+        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+
+        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        assertEquals(true, overlap);
     }
 }

@@ -24,4 +24,18 @@ public class ControllerExceptionHandler {
     public ErrorResponseEntity handleAlreadyExistsException(AlreadyExistsException e) {
         return new ErrorResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler(ReservationTooShortException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseEntity handleReservationTooShortException(ReservationTooShortException e) {
+        return new ErrorResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(BoardroomReservedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseEntity handleReservationTooShortException(BoardroomReservedException e) {
+        return new ErrorResponseEntity(HttpStatus.CONFLICT, e.getMessage());
+    }
 }

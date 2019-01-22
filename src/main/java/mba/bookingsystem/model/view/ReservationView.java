@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mba.bookingsystem.validator.AfterStartDate;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.UUID;
@@ -13,12 +16,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@AfterStartDate
 public class ReservationView {
     private UUID uuid;
     @NotNull
-    private UUID organizationUuid;
+    private OrganizationView organization;
     @NotNull
+    private BoardroomView boardroom;
+    @NotNull
+    @FutureOrPresent
     private Date startDate;
     @NotNull
+    @Future
     private Date endDate;
 }

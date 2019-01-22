@@ -4,7 +4,8 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import mba.bookingsystem.configuration.RestUrl;
-import mba.bookingsystem.model.db.Reservation;
+import mba.bookingsystem.model.PhoneInterface;
+import mba.bookingsystem.model.db.*;
 import mba.bookingsystem.service.ReservationService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -38,8 +39,8 @@ public class ReservationControllerTest {
     private static final MediaType CONTENT_TYPE = MediaType.APPLICATION_JSON_UTF8;
     private static final UUID EXPECTED_UUID = UUID.randomUUID();
     private static final UUID EXPECTED_ORGANIZATION_UUID = UUID.randomUUID();
-    private static final Long EXPECTED_START = new Date(new java.util.Date().getTime()).getTime();
-    private static final Long EXPECTED_END = new Date(new java.util.Date().getTime()).getTime();
+    private static final Long EXPECTED_START = new Date(new java.util.Date().getTime() + 500000).getTime();
+    private static final Long EXPECTED_END = new Date(new java.util.Date().getTime() + 1000000).getTime();
 
 
     @Mock
@@ -58,7 +59,29 @@ public class ReservationControllerTest {
         return new Reservation[]{
                 Reservation.builder()
                         .uuid(EXPECTED_UUID)
-                        .organizationUuid(EXPECTED_ORGANIZATION_UUID)
+                        .organization(Organization.builder()
+                                .uuid(EXPECTED_ORGANIZATION_UUID)
+                                .name("Name")
+                                .build())
+                        .boardroom(Boardroom.builder()
+                                .uuid(UUID.randomUUID())
+                                .name("Green")
+                                .identifier("0.33")
+                                .floor(0)
+                                .available(false)
+                                .normalSeats(1000)
+                                .lyingSeats(100)
+                                .hangingSeats(5)
+                                .equipment(Equipment.builder()
+                                        .projectorName("Projector 0")
+                                        .phone(Phone.builder()
+                                                .phoneAvailable(true)
+                                                .extensionNumber(100)
+                                                .publicNumber(null)
+                                                .phoneInterface(PhoneInterface.BLUETOOTH)
+                                                .build())
+                                        .build())
+                                .build())
                         .startDate(new Date(EXPECTED_START))
                         .endDate(new Date(EXPECTED_END))
                         .build()};
@@ -69,8 +92,27 @@ public class ReservationControllerTest {
         return new Reservation[]{
                 Reservation.builder()
                         .uuid(EXPECTED_UUID)
-                        .organizationUuid(EXPECTED_ORGANIZATION_UUID)
+                        .boardroom(Boardroom.builder()
+                                .uuid(UUID.randomUUID())
+                                .name("Green")
+                                .identifier("0.33")
+                                .floor(0)
+                                .available(false)
+                                .normalSeats(1000)
+                                .lyingSeats(100)
+                                .hangingSeats(5)
+                                .equipment(Equipment.builder()
+                                        .projectorName("Projector 0")
+                                        .phone(Phone.builder()
+                                                .phoneAvailable(true)
+                                                .extensionNumber(100)
+                                                .publicNumber(null)
+                                                .phoneInterface(PhoneInterface.BLUETOOTH)
+                                                .build())
+                                        .build())
+                                .build())
                         .startDate(new Date(EXPECTED_START))
+                        .endDate(new Date(EXPECTED_END))
                         .build()};
     }
 
@@ -106,7 +148,7 @@ public class ReservationControllerTest {
                 .content(reservationJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.uuid", Matchers.is(EXPECTED_UUID.toString())))
-                .andExpect(jsonPath("$.organizationUuid", Matchers.is(EXPECTED_ORGANIZATION_UUID.toString())))
+                .andExpect(jsonPath("$.organization.uuid", Matchers.is(EXPECTED_ORGANIZATION_UUID.toString())))
                 .andExpect(jsonPath("$.startDate", Matchers.is(EXPECTED_START)))
                 .andExpect(jsonPath("$.endDate", Matchers.is(EXPECTED_END)));
     }
@@ -152,7 +194,14 @@ public class ReservationControllerTest {
                         i -> reservationList.add(Reservation
                                 .builder()
                                 .uuid(UUID.randomUUID())
-                                .organizationUuid(UUID.randomUUID())
+                                .organization(Organization.builder()
+                                        .uuid(UUID.randomUUID())
+                                        .name("Name")
+                                        .build())
+                                .boardroom(Boardroom.builder()
+                                        .uuid(UUID.randomUUID())
+                                        .identifier("Green")
+                                        .build())
                                 .startDate(new Date(new java.util.Date().getTime()))
                                 .endDate(new Date(new java.util.Date().getTime()))
                                 .build())
