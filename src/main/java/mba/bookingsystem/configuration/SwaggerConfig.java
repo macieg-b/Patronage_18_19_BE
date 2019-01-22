@@ -30,7 +30,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
         return new ApiInfoBuilder()
                 .title("Patronage 18/19")
                 .description("Simple REST API for room booking system")
-                .version("1.0.0")
+                .version("1.2.0")
                 .contact(new Contact("Maciej Bartłomiejczyk", "https://github.com/macieg-b/Patronage_18_19_BE", "bartlomiejczyk.maciej@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0")
