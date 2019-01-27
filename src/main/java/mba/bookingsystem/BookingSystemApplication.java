@@ -22,32 +22,5 @@ public class BookingSystemApplication {
         SpringApplication.run(BookingSystemApplication.class, args);
     }
 
-    private int ORGANIZATION_AMOUNT = 3;
-
-    @Bean
-    CommandLineRunner initInMemoryDatabase(OrganizationRepository organizationRepository, BoardroomRepository boardroomRepository) {
-        return (args) -> IntStream.range(0, ORGANIZATION_AMOUNT)
-                .forEach(i -> {
-                    organizationRepository.save(new Organization(UUID.randomUUID(), String.format("Organization_%s", i)));
-                    boardroomRepository.save(Boardroom.builder()
-                            .uuid(UUID.randomUUID())
-                            .name(String.format("Boardroom_%s", i))
-                            .identifier(String.format("%s.33", i))
-                            .floor(i)
-                            .available(i % 2 != 0)
-                            .normalSeats(1000)
-                            .lyingSeats(100)
-                            .hangingSeats(5)
-                            .equipment(Equipment.builder()
-                                    .projectorName(String.format("Projector_%s", i))
-                                    .phone(Phone.builder()
-                                            .phoneAvailable(true)
-                                            .extensionNumber(100 + i)
-                                            .phoneInterface(i % 2 == 0 ? PhoneInterface.BLUETOOTH : PhoneInterface.USB)
-                                            .build())
-                                    .build())
-                            .build());
-                });
-    }
 }
 

@@ -17,7 +17,7 @@ public class PhoneView {
     @NotNull
     private Boolean phoneAvailable;
     @DecimalMin(value = "0")
-    @DecimalMin(value = "100")
+    @DecimalMax(value = "99")
     private Integer extensionNumber;
     @Pattern(regexp = "\\+[0-9][0-9] [0-9]{9}")
     private String publicNumber;

@@ -48,7 +48,7 @@ public class BoardroomControllerTest {
     private static final int EXPECTED_HANGING_SEATS = 2;
     private static final String EXPECTED_PROJECTOR_NAME = "Projector name";
     private static final boolean EXPECTED_PHONE_AVAILABILITY = true;
-    private static final int EXPECTED_EXTENSION_PHONE = 101;
+    private static final int EXPECTED_EXTENSION_PHONE = 99;
     private static final String EXPECTED_PHONE_INTERFACE = PhoneInterface.USB.toString();
     private static final String EXPECTED_PUBLIC_PHONE = "+12 123456789";
     private static final String BAD_PUBLIC_PHONE = "+12 12345678";
