@@ -10,8 +10,6 @@ import java.util.UUID;
 @Repository
 public interface BoardroomRepository extends JpaRepository<Boardroom, UUID> {
 
-    List<Boardroom> findAll();
-
     Boardroom findByUuid(UUID uuid);
 
     boolean existsByName(String name);
