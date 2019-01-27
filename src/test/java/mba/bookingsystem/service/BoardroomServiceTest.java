@@ -103,18 +103,18 @@ public class BoardroomServiceTest {
     @Test
     public void getAllSuccess() {
         when(boardroomRepository.findAll()).thenReturn(Collections.emptyList());
-        List<Boardroom> boardroomList = boardroomService.getAll();
+        var boardroomList = boardroomService.getAll();
         assertTrue(boardroomList.isEmpty());
     }
 
     @Test
     @UseDataProvider("getCorrectBoardroom")
     public void getOneSuccess(final Boardroom boardroom) {
-        final UUID boardroomUuid = boardroom.getUuid();
+        final var boardroomUuid = boardroom.getUuid();
         when(boardroomRepository.existsById(boardroomUuid)).thenReturn(true);
         when(boardroomRepository.findByUuid(boardroomUuid)).thenReturn(boardroom);
 
-        Boardroom dbBoardroom = boardroomService.getOne(boardroomUuid);
+        var dbBoardroom = boardroomService.getOne(boardroomUuid);
         assertEquals(EXPECTED_UUID, dbBoardroom.getUuid());
         assertEquals(EXPECTED_NAME, dbBoardroom.getName());
         assertEquals(EXPECTED_IDENTIFIER, dbBoardroom.getIdentifier());
@@ -135,7 +135,7 @@ public class BoardroomServiceTest {
     public void createSuccess(final Boardroom boardroom) {
         when(boardroomRepository.save(boardroom)).thenReturn(boardroom);
 
-        Boardroom dbBoardroom = boardroomService.create(boardroom);
+        var dbBoardroom = boardroomService.create(boardroom);
         assertEquals(EXPECTED_UUID, dbBoardroom.getUuid());
         assertEquals(EXPECTED_NAME, dbBoardroom.getName());
         assertEquals(EXPECTED_IDENTIFIER, dbBoardroom.getIdentifier());
@@ -167,7 +167,7 @@ public class BoardroomServiceTest {
     @Test
     @UseDataProvider("getCorrectBoardroom")
     public void updateSuccess(final Boardroom boardroom) {
-        final UUID boardroomUuid = boardroom.getUuid();
+        final var boardroomUuid = boardroom.getUuid();
         when(boardroomRepository.existsById(boardroomUuid)).thenReturn(true);
         when(boardroomRepository.findByUuid(boardroomUuid)).thenReturn(boardroom);
         when(boardroomRepository.save(any(Boardroom.class))).thenReturn(boardroom);
@@ -216,7 +216,7 @@ public class BoardroomServiceTest {
     @Test
     @UseDataProvider("getCorrectBoardroom")
     public void deleteSuccess(final Boardroom boardroom) {
-        final UUID boardroomUuid = boardroom.getUuid();
+        final var boardroomUuid = boardroom.getUuid();
         when(boardroomRepository.existsById(boardroomUuid)).thenReturn(true);
         boardroomService.delete(boardroomUuid);
     }
@@ -224,7 +224,7 @@ public class BoardroomServiceTest {
     @Test(expected = NotFoundException.class)
     @UseDataProvider("getCorrectBoardroom")
     public void deleteThrowNotFoundException(final Boardroom boardroom) {
-        final UUID boardroomUuid = boardroom.getUuid();
+        final var boardroomUuid = boardroom.getUuid();
         when(boardroomRepository.existsById(boardroomUuid)).thenReturn(false);
         boardroomService.delete(boardroomUuid);
     }

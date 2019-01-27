@@ -60,7 +60,7 @@ public class BoardroomControllerTest {
     @Before
     public void prepare() {
         MockitoAnnotations.initMocks(this);
-        final BoardroomController boardroomController = new BoardroomController(boardroomService);
+        final var boardroomController = new BoardroomController(boardroomService);
         mockMvc = MockMvcBuilders.standaloneSetup(boardroomController).build();
     }
 
@@ -122,7 +122,7 @@ public class BoardroomControllerTest {
 
     @Test
     public void getAllBoardroomSuccess() throws Exception {
-        final List<Boardroom> boardroomList = getBoardroomList(BOARDROOM_LIST_SIZE);
+        final var boardroomList = getBoardroomList(BOARDROOM_LIST_SIZE);
         when(boardroomService.getAll()).thenReturn(boardroomList);
 
         mockMvc.perform(get(RestUrl.BOARDROOM_URL))
@@ -156,7 +156,7 @@ public class BoardroomControllerTest {
     @Test
     @UseDataProvider("getCorrectBoardroom")
     public void createBoardroomSuccess(final Boardroom boardroom) throws Exception {
-        final String boardroomJson = modelToString(boardroom);
+        final var boardroomJson = modelToString(boardroom);
 
         when(boardroomService.create(any(Boardroom.class))).thenReturn(boardroom);
         mockMvc.perform(post(RestUrl.BOARDROOM_URL)
@@ -180,7 +180,7 @@ public class BoardroomControllerTest {
     @Test
     @UseDataProvider("getBadPublicNumberBoardroom")
     public void createBoardroomBadRequest(final Boardroom boardroom) throws Exception {
-        final String boardroomJson = modelToString(boardroom);
+        final var boardroomJson = modelToString(boardroom);
 
         when(boardroomService.create(any(Boardroom.class))).thenReturn(boardroom);
         mockMvc.perform(post(RestUrl.BOARDROOM_URL)
@@ -202,7 +202,7 @@ public class BoardroomControllerTest {
     @Test
     @UseDataProvider("getCorrectBoardroom")
     public void updateBoardroom(final Boardroom boardroom) throws Exception {
-        final String boardroomJson = modelToString(boardroom);
+        final var boardroomJson = modelToString(boardroom);
 
         when(boardroomService.update(any(Boardroom.class), eq(EXPECTED_UUID))).thenReturn(boardroom);
         mockMvc.perform(put(String.format("%s/%s", RestUrl.BOARDROOM_URL, EXPECTED_UUID))
@@ -212,7 +212,7 @@ public class BoardroomControllerTest {
     }
 
     private List<Boardroom> getBoardroomList(int count) {
-        List<Boardroom> boardroomList = new ArrayList<>();
+        var boardroomList = new ArrayList<Boardroom>();
         IntStream.range(0, count)
                 .forEach(
                         i -> boardroomList.add(Boardroom.builder()

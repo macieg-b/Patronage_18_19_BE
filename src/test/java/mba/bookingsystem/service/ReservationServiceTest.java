@@ -90,18 +90,18 @@ public class ReservationServiceTest {
     @Test
     public void getAllSuccess() {
         when(reservationRepository.findAll()).thenReturn(Collections.emptyList());
-        List<Reservation> reservationList = reservationService.getAll();
+        var reservationList = reservationService.getAll();
         assertTrue(reservationList.isEmpty());
     }
 
     @Test
     @UseDataProvider("getCorrectReservation")
     public void getOneSuccess(final Reservation reservation) {
-        final UUID reservationUuid = reservation.getUuid();
+        final var reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(true);
         when(reservationRepository.findByUuid(reservationUuid)).thenReturn(reservation);
 
-        Reservation dbReservation = reservationService.getOne(reservationUuid);
+        var dbReservation = reservationService.getOne(reservationUuid);
         assertEquals(EXPECTED_UUID, dbReservation.getUuid());
         assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganization().getUuid());
         assertEquals(EXPECTED_START, dbReservation.getStartDate().getTime());
@@ -115,7 +115,7 @@ public class ReservationServiceTest {
         when(organizationRepository.existsById(any(UUID.class))).thenReturn(true);
         when(boardroomRepository.existsById(any(UUID.class))).thenReturn(true);
         when(organizationRepository.findByUuid(any(UUID.class))).thenReturn(getCorrectOrganization());
-        Reservation dbReservation = reservationService.create(reservation);
+        var dbReservation = reservationService.create(reservation);
         assertEquals(EXPECTED_UUID, dbReservation.getUuid());
         assertEquals(EXPECTED_ORGANIZATION_UUID, dbReservation.getOrganization().getUuid());
         assertEquals(EXPECTED_START, dbReservation.getStartDate().getTime());
@@ -132,7 +132,7 @@ public class ReservationServiceTest {
     @Test
     @UseDataProvider("getCorrectReservation")
     public void updateSuccess(final Reservation reservation) {
-        final UUID reservationUuid = reservation.getUuid();
+        final var reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(true);
         when(reservationRepository.findByUuid(reservationUuid)).thenReturn(reservation);
         when(organizationRepository.existsById(any(UUID.class))).thenReturn(true);
@@ -158,7 +158,7 @@ public class ReservationServiceTest {
     @Test
     @UseDataProvider("getCorrectReservation")
     public void deleteSuccess(final Reservation reservation) {
-        final UUID reservationUuid = reservation.getUuid();
+        final var reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(true);
         reservationService.delete(reservationUuid);
     }
@@ -166,56 +166,52 @@ public class ReservationServiceTest {
     @Test(expected = NotFoundException.class)
     @UseDataProvider("getCorrectReservation")
     public void deleteThrowNotFoundException(final Reservation reservation) {
-        final UUID reservationUuid = reservation.getUuid();
+        final var reservationUuid = reservation.getUuid();
         when(reservationRepository.existsById(reservationUuid)).thenReturn(false);
         reservationService.delete(reservationUuid);
     }
 
     @Test
     public void dateNotOverlap() {
-        Date startA, endA, startB, endB;
-        startA = new Date();
-        endA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
-        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
-        endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        var startA = new Date();
+        var endA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        var startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        var endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
 
-        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        var overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
         assertEquals(false, overlap);
     }
 
     @Test
     public void endBOverlapInAPeriod() {
-        Date startA, endA, startB, endB;
-        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
-        endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
-        startB = new Date(new Date().getTime() + (20 * ONE_MINUTE_IN_MILLIS));
-        endB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        var startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        var endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        var startB = new Date(new Date().getTime() + (20 * ONE_MINUTE_IN_MILLIS));
+        var endB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
 
-        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        var overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
         assertEquals(true, overlap);
     }
 
     @Test
     public void startBOverlapInAPeriod() {
-        Date startA, endA, startB, endB;
-        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
-        endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
-        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
-        endB = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
+        var startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        var endA = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        var startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        var endB = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
 
-        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        var overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
         assertEquals(true, overlap);
     }
 
     @Test
     public void startBANDendBOverlapInAPeriod() {
-        Date startA, endA, startB, endB;
-        startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
-        endA = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
-        startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
-        endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
+        var startA = new Date(new Date().getTime() + (60 * ONE_MINUTE_IN_MILLIS));
+        var endA = new Date(new Date().getTime() + (120 * ONE_MINUTE_IN_MILLIS));
+        var startB = new Date(new Date().getTime() + (80 * ONE_MINUTE_IN_MILLIS));
+        var endB = new Date(new Date().getTime() + (100 * ONE_MINUTE_IN_MILLIS));
 
-        boolean overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
+        var overlap = reservationService.ifDatesOverlap(startA, endA, startB, endB);
         assertEquals(true, overlap);
     }
 }

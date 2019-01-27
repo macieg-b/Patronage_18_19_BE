@@ -77,7 +77,7 @@ public class ReservationService {
 
     private void throwIfNotAvailable(Reservation reservation) {
         var boardroom = reservation.getBoardroom();
-        List<Reservation> reservations = reservationRepository.findAllByBoardroomUuid(reservation.getBoardroom().getUuid());
+        var reservations = reservationRepository.findAllByBoardroomUuid(reservation.getBoardroom().getUuid());
         boolean overlap = reservations.stream()
                 .anyMatch(res -> ifDatesOverlap(res.getStartDate(), res.getEndDate(), reservation.getStartDate(), reservation.getEndDate()));
         if (overlap) {

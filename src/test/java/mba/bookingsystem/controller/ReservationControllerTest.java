@@ -50,7 +50,7 @@ public class ReservationControllerTest {
     @Before
     public void prepare() {
         MockitoAnnotations.initMocks(this);
-        final ReservationController reservationController = new ReservationController(reservationService);
+        final var reservationController = new ReservationController(reservationService);
         mockMvc = MockMvcBuilders.standaloneSetup(reservationController).build();
     }
 
@@ -118,7 +118,7 @@ public class ReservationControllerTest {
 
     @Test
     public void getAllReservationSuccess() throws Exception {
-        final List<Reservation> reservationList = getReservationList(RESERVATION_LIST_SIZE);
+        final var reservationList = getReservationList(RESERVATION_LIST_SIZE);
         when(reservationService.getAll()).thenReturn(reservationList);
 
         mockMvc.perform(get(RestUrl.RESERVATION_URL))
@@ -140,7 +140,7 @@ public class ReservationControllerTest {
     @Test
     @UseDataProvider("getCorrectReservation")
     public void createReservationSuccess(final Reservation reservation) throws Exception {
-        final String reservationJson = modelToString(reservation);
+        final var reservationJson = modelToString(reservation);
 
         when(reservationService.create(any(Reservation.class))).thenReturn(reservation);
         mockMvc.perform(post(RestUrl.RESERVATION_URL)
@@ -156,7 +156,7 @@ public class ReservationControllerTest {
     @Test
     @UseDataProvider("getBadReservation")
     public void createReservationBadRequest(final Reservation reservation) throws Exception {
-        final String reservationJson = modelToString(reservation);
+        final var reservationJson = modelToString(reservation);
 
         when(reservationService.create(any(Reservation.class))).thenReturn(reservation);
         mockMvc.perform(post(RestUrl.RESERVATION_URL)
@@ -167,7 +167,7 @@ public class ReservationControllerTest {
 
     @Test
     public void deleteReservationById() throws Exception {
-        UUID id = UUID.randomUUID();
+        var id = UUID.randomUUID();
         doNothing().when(reservationService).delete(id);
         mockMvc.perform(delete(String.format("%s/%s", RestUrl.RESERVATION_URL, id)))
                 .andDo(print())
@@ -178,7 +178,7 @@ public class ReservationControllerTest {
     @Test
     @UseDataProvider("getCorrectReservation")
     public void updateReservation(final Reservation reservation) throws Exception {
-        final String reservationJson = modelToString(reservation);
+        final var reservationJson = modelToString(reservation);
 
         when(reservationService.update(any(Reservation.class), eq(EXPECTED_UUID))).thenReturn(reservation);
         mockMvc.perform(put(String.format("%s/%s", RestUrl.RESERVATION_URL, EXPECTED_UUID))
@@ -188,7 +188,7 @@ public class ReservationControllerTest {
     }
 
     private List<Reservation> getReservationList(int count) {
-        List<Reservation> reservationList = new ArrayList<>();
+        var reservationList = new ArrayList<Reservation>();
         IntStream.range(0, count)
                 .forEach(
                         i -> reservationList.add(Reservation

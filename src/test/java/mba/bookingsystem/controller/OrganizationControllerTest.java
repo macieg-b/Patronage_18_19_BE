@@ -45,7 +45,7 @@ public class OrganizationControllerTest {
     @Before
     public void prepare() {
         MockitoAnnotations.initMocks(this);
-        final OrganizationController organizationController = new OrganizationController(organizationService);
+        final var organizationController = new OrganizationController(organizationService);
         mockMvc = MockMvcBuilders.standaloneSetup(organizationController).build();
     }
 
@@ -62,7 +62,7 @@ public class OrganizationControllerTest {
 
     @Test
     public void getAllOrganizationSuccess() throws Exception {
-        final List<Organization> organizationList = getOrganizationList(ORGANIZATION_LIST_SIZE);
+        final var organizationList = getOrganizationList(ORGANIZATION_LIST_SIZE);
         when(organizationService.getAll()).thenReturn(organizationList);
 
         mockMvc.perform(get(RestUrl.ORGANIZATION_URL))
@@ -85,7 +85,7 @@ public class OrganizationControllerTest {
     @Test
     @UseDataProvider("getCorrectOrganization")
     public void createOrganizationSuccess(final Organization organization) throws Exception {
-        final String organizationJson = modelToString(organization);
+        final var organizationJson = modelToString(organization);
 
         when(organizationService.create(any(Organization.class))).thenReturn(organization);
         mockMvc.perform(post(RestUrl.ORGANIZATION_URL)
@@ -98,7 +98,7 @@ public class OrganizationControllerTest {
     @Test
     @UseDataProvider("getTooLongNameOrganization")
     public void createOrganizationBadRequest(final Organization organization) throws Exception {
-        final String organizationJson = modelToString(organization);
+        final var organizationJson = modelToString(organization);
 
         when(organizationService.create(any(Organization.class))).thenReturn(organization);
         mockMvc.perform(post(RestUrl.ORGANIZATION_URL)
@@ -109,7 +109,7 @@ public class OrganizationControllerTest {
 
     @Test
     public void deleteOrganizationById() throws Exception {
-        UUID id = UUID.randomUUID();
+        var id = UUID.randomUUID();
         doNothing().when(organizationService).delete(id);
         mockMvc.perform(delete(String.format("%s/%s", RestUrl.ORGANIZATION_URL, id)))
                 .andDo(print())
@@ -120,7 +120,7 @@ public class OrganizationControllerTest {
     @Test
     @UseDataProvider("getCorrectOrganization")
     public void updateOrganization(final Organization organization) throws Exception {
-        final String organizationJson = modelToString(organization);
+        final var organizationJson = modelToString(organization);
 
         when(organizationService.update(any(Organization.class), eq(EXPECTED_UUID))).thenReturn(organization);
         mockMvc.perform(put(String.format("%s/%s", RestUrl.ORGANIZATION_URL, EXPECTED_UUID))
@@ -130,7 +130,7 @@ public class OrganizationControllerTest {
     }
 
     private List<Organization> getOrganizationList(int count) {
-        List<Organization> organizationList = new ArrayList<>();
+       var organizationList = new ArrayList<Organization>();
         IntStream.range(0, count)
                 .forEach(
                         i -> organizationList.add(new Organization(UUID.randomUUID(), String.format("Organization_%s", i)))

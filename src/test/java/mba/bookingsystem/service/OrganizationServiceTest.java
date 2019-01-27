@@ -47,18 +47,18 @@ public class OrganizationServiceTest {
     @Test
     public void getAllSuccess() {
         when(organizationRepository.findAll()).thenReturn(Collections.emptyList());
-        List<Organization> organizationList = organizationService.getAll();
+        var organizationList = organizationService.getAll();
         assertTrue(organizationList.isEmpty());
     }
 
     @Test
     @UseDataProvider("getCorrectOrganization")
     public void getOneSuccess(final Organization organization) {
-        final UUID organizationUuid = organization.getUuid();
+        final var organizationUuid = organization.getUuid();
         when(organizationRepository.existsById(organizationUuid)).thenReturn(true);
         when(organizationRepository.findByUuid(organizationUuid)).thenReturn(organization);
 
-        Organization dbOrganization = organizationService.getOne(organizationUuid);
+        var dbOrganization = organizationService.getOne(organizationUuid);
         assertEquals(EXPECTED_NAME, dbOrganization.getName());
         assertEquals(EXPECTED_UUID, dbOrganization.getUuid());
     }
@@ -68,7 +68,7 @@ public class OrganizationServiceTest {
     public void createSuccess(final Organization organization) {
         when(organizationRepository.save(organization)).thenReturn(organization);
 
-        Organization dbOrganization = organizationService.create(organization);
+        var dbOrganization = organizationService.create(organization);
         assertEquals(EXPECTED_NAME, dbOrganization.getName());
     }
 
@@ -86,7 +86,7 @@ public class OrganizationServiceTest {
     @Test
     @UseDataProvider("getCorrectOrganization")
     public void updateSuccess(final Organization organization) {
-        final UUID organizationUuid = organization.getUuid();
+        final var organizationUuid = organization.getUuid();
         when(organizationRepository.existsById(organizationUuid)).thenReturn(true);
         when(organizationRepository.findByUuid(organizationUuid)).thenReturn(organization);
         when(organizationRepository.save(any(Organization.class))).thenReturn(organization);
@@ -122,7 +122,7 @@ public class OrganizationServiceTest {
     @Test
     @UseDataProvider("getCorrectOrganization")
     public void deleteSuccess(final Organization organization) {
-        final UUID organizationUuid = organization.getUuid();
+        final var organizationUuid = organization.getUuid();
         when(organizationRepository.existsById(organizationUuid)).thenReturn(true);
         organizationService.delete(organizationUuid);
     }
@@ -130,7 +130,7 @@ public class OrganizationServiceTest {
     @Test(expected = NotFoundException.class)
     @UseDataProvider("getCorrectOrganization")
     public void deleteThrowNotFoundException(final Organization organization) {
-        final UUID organizationUuid = organization.getUuid();
+        final var organizationUuid = organization.getUuid();
         when(organizationRepository.existsById(organizationUuid)).thenReturn(false);
         organizationService.delete(organizationUuid);
     }
