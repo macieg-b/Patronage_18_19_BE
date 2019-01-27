@@ -27,13 +27,13 @@ public class BoardroomView {
     @NotNull
     @DecimalMin(value = "0")
     @DecimalMax(value = "10")
-    private int floor;
+    private Integer floor;
     @NotNull
-    private boolean available;
+    private Boolean available;
     @NotNull
-    private int normalSeats;
-    private int lyingSeats;
-    private int hangingSeats;
+    private Integer normalSeats;
+    private Integer lyingSeats;
+    private Integer hangingSeats;
 
     @Valid
     private EquipmentView equipment;

@@ -15,10 +15,10 @@ import javax.validation.constraints.*;
 @Getter
 public class PhoneView {
     @NotNull
-    private boolean phoneAvailable;
+    private Boolean phoneAvailable;
     @DecimalMin(value = "0")
     @DecimalMin(value = "100")
-    private int extensionNumber;
+    private Integer extensionNumber;
     @Pattern(regexp = "\\+[0-9][0-9] [0-9]{9}")
     private String publicNumber;
     private PhoneInterface phoneInterface;
